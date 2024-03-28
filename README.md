@@ -11,11 +11,11 @@ A Pokedex is just a make-believe device that lets us look up information about a
 - A CLI tool interacting with a back-end API
 - Local Go development and tooling
 - Caching to improve performance
+- Update the CLI to support the "up/down" arrow to cycle through previous commands
 
 <br>
 
 ## Future Improvements
-- Update the CLI to support the "up" arrow to cycle through previous commands
 - Simulate battles between pokemon
 - Add unit tests
 - Refactor your code to organize it better and make it more testable
