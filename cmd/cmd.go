@@ -8,34 +8,21 @@ import (
 	"github.com/chzyer/readline"
 
 	"github.com/siddhant-vij/Pokedex/config"
+	"github.com/siddhant-vij/Pokedex/utils"
 )
 
-var pokedex = map[string]PokemonProperties{}
-
-type PokemonProperties struct {
-	Name           string         `json:"name"`
-	BaseExperience int            `json:"base_experience"`
-	Height         int            `json:"height"`
-	Weight         int            `json:"weight"`
-	Stats          []PokemonStats `json:"stats"`
-	Types          []PokemonType  `json:"types"`
-}
-
-type PokemonStats struct {
-	BaseStat int `json:"base_stat"`
-	Stat     struct {
-		Name string `json:"name"`
-	}
-}
-
-type PokemonType struct {
-	Type struct {
-		Name string `json:"name"`
-	} `json:"type"`
-}
+var pokedex map[string]utils.PokemonProperties
+var rwOps utils.JSONFileOps
 
 func Run() {
-	cfg := &config.Config{}
+	cfg := &config.Config{}	
+
+	err:= rwOps.ReadPokedex()
+	if err != nil {
+		pokedex = make(map[string]utils.PokemonProperties)
+	} else {
+		pokedex = rwOps.Pokedex()
+	}
 
 	rl, err := readline.New("pokedex > ")
 	if err != nil {
@@ -52,6 +39,7 @@ func Run() {
 
 		line = strings.ToLower(strings.TrimSpace(line))
 		if line == "" {
+			fmt.Println()
 			continue
 		}
 

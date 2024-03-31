@@ -6,6 +6,7 @@ import (
 	"math/rand"
 
 	"github.com/siddhant-vij/Pokedex/api"
+	"github.com/siddhant-vij/Pokedex/utils"
 )
 
 func CatchPokemon(pokemon string) {
@@ -28,7 +29,7 @@ func catchPokemon(pokemon string) error {
 		return err
 	}
 
-	var response PokemonProperties
+	var response utils.PokemonProperties
 
 	if err := json.Unmarshal(body, &response); err != nil {
 		return fmt.Errorf("error parsing JSON: %w", err)
@@ -40,6 +41,12 @@ func catchPokemon(pokemon string) error {
 	if randomDifficult > 40 {
 		fmt.Printf("%s was caught!\n", response.Name)
 		pokedex[response.Name] = response
+		err := rwOps.WritePokedex(pokedex)
+		if err != nil {
+			fmt.Printf("%s was caught but since, it couldn't be added to your pokedex file - it was deleted.\n", response.Name)
+			delete(pokedex, response.Name)
+			return err
+		}
 	} else {
 		fmt.Printf("%s escaped.\n", response.Name)
 	}
